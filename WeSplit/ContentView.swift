@@ -7,15 +7,29 @@
 
 import SwiftUI
 
+struct Person: Identifiable {
+    let id = UUID()
+    let name: String
+}
+
+let people: [Person] = [
+    Person(name: "Name 1"),
+    Person(name: "Name 2"),
+    Person(name: "Name 3"),
+    Person(name: "Name 4"),
+]
+
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            Form {
+                Section {
+                    ForEach(people) { Text($0.name) }
+                }
+            }
+            .navigationTitle(Text("People"))
+            .navigationBarTitleDisplayMode(.large)
         }
-        .padding()
     }
 }
 
