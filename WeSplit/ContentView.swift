@@ -7,27 +7,30 @@
 
 import SwiftUI
 
-struct Person: Identifiable {
-    let id = UUID()
-    let name: String
+struct Person: Identifiable, Hashable {
+    var id: UUID = UUID()
+    var name: String
 }
 
-let people: [Person] = [
-    Person(name: "Name 1"),
-    Person(name: "Name 2"),
-    Person(name: "Name 3"),
-    Person(name: "Name 4"),
-]
-
 struct ContentView: View {
+    @State private var person: Person? = nil
+    let people = [
+        Person(name: "Asya"),
+        Person(name: "Zakhar"),
+        Person(name: "Alina"),
+    ]
+    
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    ForEach(people) { Text($0.name) }
+                Picker("Select a person", selection: $person) {
+                    ForEach(people) { person in
+                        Text(person.name)
+                            .tag(person)
+                    }
                 }
             }
-            .navigationTitle(Text("People"))
+            .navigationTitle(Text("Navigation header"))
             .navigationBarTitleDisplayMode(.large)
         }
     }
