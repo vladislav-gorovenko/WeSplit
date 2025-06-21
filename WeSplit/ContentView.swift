@@ -7,31 +7,40 @@
 
 import SwiftUI
 
-struct Person: Identifiable, Hashable {
-    var id: UUID = UUID()
-    var name: String
-}
+let tipProcentages = [20, 30, 40, 50]
 
 struct ContentView: View {
-    @State private var person: Person? = nil
-    let people = [
-        Person(name: "Asya"),
-        Person(name: "Zakhar"),
-        Person(name: "Alina"),
-    ]
+    @State private var amount: Double = 0.0
+    @State private var numberOfPeople: Int = 2
+    @State private var tipPercentage: Int  = 20
+    
+    var totalPerPerson: Double {
+        return (amount * Double(tipPercentage + 100)/100) / Double(numberOfPeople);
+    }
     
     var body: some View {
         NavigationStack {
             Form {
-                Picker("Select a person", selection: $person) {
-                    ForEach(people) { person in
-                        Text(person.name)
-                            .tag(person)
+                TextField("", value: $amount, format: .currency(code: "USD"))
+                    .keyboardType(.decimalPad)
+                Picker("Number of people", selection: $numberOfPeople) {
+                    ForEach(2..<100, id: \.self) {
+                        Text("\($0)").tag($0)
                     }
+                   }
+                   .pickerStyle(.navigationLink)
+                Section("Tip percentage") {
+                    Picker("Tip percentage", selection: $tipPercentage) {
+                        ForEach(tipProcentages, id: \.self) {
+                            Text($0, format: .percent).tag($0)
+                        }
+                    }.pickerStyle(.segmented)
+                }
+                Section("Total per person") {
+                    Text(totalPerPerson, format: .currency(code: "USD"))
                 }
             }
-            .navigationTitle(Text("Navigation header"))
-            .navigationBarTitleDisplayMode(.large)
+            .navigationTitle(Text("WeSplit"))
         }
     }
 }
